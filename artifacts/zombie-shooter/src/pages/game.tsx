@@ -952,6 +952,31 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
                       {[...Array(5)].map((_, i) => <span key={i} className="text-yellow-400 text-xs">★</span>)}
                     </div>
 
+                    {/* ── SELECTED SHOOTER PREVIEW ── */}
+                    <div className="flex justify-center items-end mb-1" style={{ height: 130 }}>
+                      <div style={{ position: "relative", width: 110, height: 130 }}>
+                        {/* glow halo behind sprite */}
+                        <div style={{
+                          position: "absolute", inset: 0,
+                          borderRadius: "50%",
+                          background: `radial-gradient(ellipse at 50% 80%, ${CHARACTERS[selectedChar].color}55 0%, transparent 70%)`,
+                          filter: "blur(8px)",
+                        }} />
+                        <img
+                          key={CHARACTERS[selectedChar].shooterSrc}
+                          src={CHARACTERS[selectedChar].shooterSrc}
+                          alt={CHARACTERS[selectedChar].name}
+                          style={{
+                            position: "relative",
+                            width: "100%", height: "100%",
+                            objectFit: "contain",
+                            filter: `drop-shadow(0 0 12px ${CHARACTERS[selectedChar].color}99)`,
+                            transition: "opacity 0.2s",
+                          }}
+                        />
+                      </div>
+                    </div>
+
                     {/* ── CHARACTER SELECT ── */}
                     <div className="w-full rounded-xl border mb-3 overflow-hidden"
                       style={{ background: "rgba(0,8,20,0.85)", borderColor: "rgba(0,200,255,0.2)" }}>
