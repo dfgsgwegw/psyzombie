@@ -76,6 +76,12 @@ export default function AdminPage({ onBack }: Props) {
     loadData();
   }
 
+  async function deleteTournament(id: number, name: string) {
+    if (!confirm(`Delete "${name}"? This will remove it permanently.`)) return;
+    await api.admin.deleteTournament(id);
+    loadData();
+  }
+
   async function createTournament(e: React.FormEvent) {
     e.preventDefault();
     setTourneyMsg("");
@@ -240,9 +246,17 @@ export default function AdminPage({ onBack }: Props) {
                     const end = new Date(t.endTime);
                     return (
                       <div key={t.id} className="bg-black/30 rounded px-4 py-3 space-y-2">
-                        <div className="flex items-start justify-between">
+                        <div className="flex items-start justify-between gap-2">
                           <p className="font-bold text-white">{t.name}</p>
-                          <TournamentStatus t={t} />
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            <TournamentStatus t={t} />
+                            <button
+                              onClick={() => deleteTournament(t.id, t.name)}
+                              className="text-red-400 hover:text-red-300 text-xs border border-red-500/30 hover:border-red-400/50 px-2 py-0.5 rounded transition"
+                            >
+                              Delete
+                            </button>
+                          </div>
                         </div>
                         <p className="text-white/40 text-xs">
                           {start.toLocaleString()} → {end.toLocaleString()}

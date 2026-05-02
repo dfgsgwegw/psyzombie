@@ -103,6 +103,8 @@ export const api = {
       ),
     listTournaments: () =>
       req<{ tournaments: Tournament[] }>("GET", "/admin/tournaments", undefined, true),
+    deleteTournament: (id: number) =>
+      req<{ ok: boolean }>("DELETE", `/admin/tournaments/${id}`, undefined, true),
     changePassword: (currentPassword: string, newPassword: string) =>
       req<{ ok: boolean }>("POST", "/admin/change-password", { currentPassword, newPassword }, true),
   },

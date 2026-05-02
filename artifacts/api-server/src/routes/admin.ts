@@ -73,6 +73,16 @@ router.get("/admin/tournaments", requireAdmin, async (_req, res) => {
   res.json({ tournaments });
 });
 
+router.delete("/admin/tournaments/:id", requireAdmin, async (req, res) => {
+  const id = Number(req.params.id);
+  if (isNaN(id)) {
+    res.status(400).json({ error: "Invalid tournament id" });
+    return;
+  }
+  await db.delete(tournamentsTable).where(eq(tournamentsTable.id, id));
+  res.json({ ok: true });
+});
+
 router.post("/admin/change-password", requireAdmin, async (req, res) => {
   const { currentPassword, newPassword } = req.body as {
     currentPassword?: string;
