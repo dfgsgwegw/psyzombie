@@ -53,7 +53,7 @@ export interface Tournament {
 }
 
 export interface TournamentStatus {
-  status: "active" | "upcoming" | "none";
+  status: "active" | "upcoming" | "ended" | "none";
   tournament: Tournament | null;
 }
 

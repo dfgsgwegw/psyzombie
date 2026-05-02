@@ -28,6 +28,18 @@ router.get("/tournament/current", async (req, res) => {
 
     if (upcoming) {
       res.json({ status: "upcoming", tournament: upcoming });
+      return;
+    }
+
+    const [ended] = await db
+      .select()
+      .from(tournamentsTable)
+      .where(lte(tournamentsTable.endTime, now))
+      .orderBy(desc(tournamentsTable.endTime))
+      .limit(1);
+
+    if (ended) {
+      res.json({ status: "ended", tournament: ended });
     } else {
       res.json({ status: "none", tournament: null });
     }

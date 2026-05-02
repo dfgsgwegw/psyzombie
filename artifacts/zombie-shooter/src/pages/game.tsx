@@ -101,8 +101,8 @@ function fmt(ms: number): string {
 const RANK_MEDAL: Record<number, string> = { 1: "🥇", 2: "🥈", 3: "🥉" };
 const RANK_COLOR: Record<number, string> = { 1: "text-yellow-400", 2: "text-gray-300", 3: "text-orange-400" };
 
-function LiveLeaderboard({ entries, myUsername, tournament }: {
-  entries: LeaderboardEntry[]; myUsername: string; tournament: Tournament | null;
+function LiveLeaderboard({ entries, myUsername, tournament, tournamentStatus }: {
+  entries: LeaderboardEntry[]; myUsername: string; tournament: Tournament | null; tournamentStatus: string;
 }) {
   const [timeLeft, setTimeLeft] = useState("");
   useEffect(() => {
@@ -113,11 +113,17 @@ function LiveLeaderboard({ entries, myUsername, tournament }: {
     return () => clearInterval(t);
   }, [tournament]);
 
+  const isEnded = tournamentStatus === "ended" || (tournament ? new Date(tournament.endTime) <= new Date() : false);
+
   return (
     <div className="flex flex-col h-full overflow-hidden rounded-lg border border-cyan-500/20" style={{ background: "rgba(0,20,30,0.88)" }}>
       <div className="px-3 py-2 border-b border-cyan-500/20 flex-shrink-0" style={{ background: "rgba(0,60,80,0.5)" }}>
         <p className="text-cyan-400 font-black tracking-widest text-xs uppercase">🌊 Leaderboard</p>
-        {tournament && <p className="text-white/40 text-xs font-mono mt-0.5 truncate">{timeLeft} left</p>}
+        {tournament && (
+          isEnded
+            ? <p className="text-red-400 text-xs font-bold mt-0.5">🔴 ENDED · Final Scores</p>
+            : <p className="text-white/40 text-xs font-mono mt-0.5 truncate">{timeLeft} left</p>
+        )}
       </div>
       <div className="flex-1 overflow-y-auto">
         {entries.length === 0 ? (
@@ -157,7 +163,7 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
   const [score, setScore] = useState(0);
   const [health, setHealth] = useState(100);
   const [tournament, setTournament] = useState<Tournament | null>(null);
-  const [tournamentStatus, setTournamentStatus] = useState<"active" | "upcoming" | "none">("none");
+  const [tournamentStatus, setTournamentStatus] = useState<"active" | "upcoming" | "ended" | "none">("none");
   const [timeLeft, setTimeLeft] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -179,6 +185,9 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
   const charImgs = useRef<HTMLImageElement[]>([]);
 
   const sessionTokenRef = useRef<string | null>(null);
+  const [tournamentEndedWhilePlaying, setTournamentEndedWhilePlaying] = useState(false);
+  const gameStateRef = useRef<GameState>("menu");
+  const playModeRef = useRef<PlayMode>(null);
 
   const gs = useRef({
     shooter: { x: CW / 2 - 48, y: CH - 110, w: 96, h: 96, speed: 14 },
@@ -248,13 +257,47 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
     return () => { clearInterval(lb); clearInterval(tr); stopDetect(); mq.removeEventListener("change", checkMobile); };
   }, [fetchTournament, fetchLeaderboard]);
 
+  // Keep refs in sync so setTimeout callbacks read current state without stale closures
+  useEffect(() => { gameStateRef.current = gameState; }, [gameState]);
+  useEffect(() => { playModeRef.current = playMode; }, [playMode]);
+
   useEffect(() => {
     if (!tournament) return;
-    const tick = () => setTimeLeft(fmt(Math.max(0, new Date(tournament.endTime).getTime() - Date.now())));
+    const endMs = new Date(tournament.endTime).getTime();
+    const tick = () => setTimeLeft(fmt(Math.max(0, endMs - Date.now())));
     tick();
     const t = setInterval(tick, 1000);
-    return () => clearInterval(t);
-  }, [tournament]);
+
+    // When tournament expires mid-game: force-end and auto-submit the score
+    const remaining = endMs - Date.now();
+    let endTimer: ReturnType<typeof setTimeout> | null = null;
+    if (remaining > 0) {
+      endTimer = setTimeout(async () => {
+        if (gameStateRef.current === "playing" && playModeRef.current === "tournament") {
+          const pts = gs.current.pts;
+          const token = sessionTokenRef.current;
+          gs.current.dead = true;
+          cancelAnimationFrame(gs.current.animId);
+          setScore(pts);
+          setGameState("over");
+          setTournamentEndedWhilePlaying(true);
+          if (token) {
+            try {
+              await api.submitScore(pts, token);
+              sessionTokenRef.current = null;
+              setSubmitted(true);
+              fetchLeaderboard();
+            } catch {}
+          }
+        }
+      }, remaining);
+    }
+
+    return () => {
+      clearInterval(t);
+      if (endTimer) clearTimeout(endTimer);
+    };
+  }, [tournament, fetchLeaderboard]);
 
   async function startGame() {
     try { const { sessionToken } = await api.startSession(); sessionTokenRef.current = sessionToken; } catch { return; }
@@ -265,6 +308,7 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
     s.pts = 0; s.hp = 100; s.dead = false; s.frame = 0; s.diffMult = 1; s.screenShake = 0; s.lastShot = 0; s.lastFrameTime = 0;
     setScore(0); setHealth(100);
     setSubmitted(false); setSubmitError(""); setDevtoolsWarning(false);
+    setTournamentEndedWhilePlaying(false);
     setPlayMode("tournament");
     setGameState("playing");
     requestAnimationFrame(loop);
@@ -816,7 +860,7 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
               <button onClick={() => setShowSidebar(false)} className="text-white/40 text-lg leading-none px-2">×</button>
             </div>
           )}
-          <LiveLeaderboard entries={leaderboard} myUsername={user?.discordUsername ?? ""} tournament={tournament} />
+          <LiveLeaderboard entries={leaderboard} myUsername={user?.discordUsername ?? ""} tournament={tournament} tournamentStatus={tournamentStatus} />
         </div>
       )}
     </>
@@ -858,8 +902,14 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
       {(tournament || tournamentStatus === "none") && (
         <div className="text-center py-1 px-2 flex-shrink-0">
           {tournament ? (
-            <span className={`text-xs font-bold px-3 py-0.5 rounded ${canPlay ? "bg-cyan-500/15 text-cyan-400" : "bg-yellow-500/15 text-yellow-400"}`}>
-              {canPlay ? `🟢 ${tournament.name} · ${timeLeft} left` : `⏳ ${tournament.name} — starts soon`}
+            <span className={`text-xs font-bold px-3 py-0.5 rounded ${
+              canPlay ? "bg-cyan-500/15 text-cyan-400"
+              : tournamentStatus === "ended" ? "bg-red-500/15 text-red-400"
+              : "bg-yellow-500/15 text-yellow-400"
+            }`}>
+              {canPlay ? `🟢 ${tournament.name} · ${timeLeft} left`
+                : tournamentStatus === "ended" ? `🔴 ${tournament.name} — ENDED`
+                : `⏳ ${tournament.name} — starts soon`}
             </span>
           ) : (
             <span className="text-xs text-white/20">No active tournament</span>
@@ -1031,8 +1081,16 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
                         </button>
                       )}
                       {loggedIn && !canPlay && (
-                        <div className="text-white/30 text-sm border border-white/10 px-6 py-3 rounded-xl text-center">
-                          {tournamentStatus === "upcoming" ? "Tournament hasn't started yet" : "No active tournament"}
+                        <div className={`text-sm border px-6 py-3 rounded-xl text-center ${
+                          tournamentStatus === "ended"
+                            ? "text-red-300 border-red-500/30 bg-red-900/10"
+                            : "text-white/30 border-white/10"
+                        }`}>
+                          {tournamentStatus === "upcoming"
+                            ? "Tournament hasn't started yet"
+                            : tournamentStatus === "ended"
+                            ? "🏆 Tournament ended · Check the final leaderboard →"
+                            : "No active tournament"}
                         </div>
                       )}
                       <button onClick={startDemoGame}
@@ -1057,8 +1115,12 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
                 <div className="absolute inset-0 rounded-lg flex items-center justify-center" style={overlayBg}>
                   <div className="absolute inset-0 rounded-lg" style={{ background: "rgba(0,0,10,0.8)" }} />
                   <div className="relative z-10 rounded-xl p-5 sm:p-10 text-center w-72 sm:w-80 border"
-                    style={{ background: "rgba(0,5,20,0.92)", borderColor: "rgba(255,50,50,0.35)" }}>
-                    <h2 className="text-3xl sm:text-4xl font-black tracking-widest mb-2 text-red-400">GAME OVER</h2>
+                    style={{ background: "rgba(0,5,20,0.92)", borderColor: tournamentEndedWhilePlaying ? "rgba(255,180,0,0.4)" : "rgba(255,50,50,0.35)" }}>
+                    {tournamentEndedWhilePlaying ? (
+                      <h2 className="text-2xl sm:text-3xl font-black tracking-widest mb-2 text-yellow-400">🏆 TOURNAMENT<br/>ENDED!</h2>
+                    ) : (
+                      <h2 className="text-3xl sm:text-4xl font-black tracking-widest mb-2 text-red-400">GAME OVER</h2>
+                    )}
                     <p className="text-5xl sm:text-6xl font-black text-yellow-400 my-3">{score}</p>
                     <p className="text-white/40 text-sm mb-5">Final Score</p>
                     {devtoolsWarning && (

@@ -135,7 +135,8 @@ router.get("/leaderboard", async (_req, res) => {
     .innerJoin(usersTable, eq(scoresTable.userId, usersTable.id))
     .where(eq(scoresTable.tournamentId, targetTournament.id))
     .groupBy(usersTable.discordUsername)
-    .orderBy(sql`MAX(${scoresTable.score}) DESC`);
+    .orderBy(sql`MAX(${scoresTable.score}) DESC`)
+    .limit(50);
 
   res.json({ tournament: targetTournament, leaderboard });
 });
