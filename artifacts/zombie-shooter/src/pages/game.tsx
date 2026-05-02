@@ -208,6 +208,7 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
   const [playMode, setPlayMode] = useState<PlayMode>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
+  const isMobileRef = useRef(false);
 
   const sessionTokenRef = useRef<string | null>(null);
 
@@ -249,7 +250,7 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
 
     // Detect mobile/touch device
     const mq = window.matchMedia("(max-width: 639px)");
-    const checkMobile = () => setIsMobile(mq.matches || navigator.maxTouchPoints > 0);
+    const checkMobile = () => { const m = mq.matches || navigator.maxTouchPoints > 0; setIsMobile(m); isMobileRef.current = m; };
     checkMobile();
     mq.addEventListener("change", checkMobile);
 
@@ -398,6 +399,16 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
     s.frame++;
     // Increase difficulty every 30s (based on real time via frame count at 60fps)
     s.diffMult = 1 + Math.floor(s.frame / 1800) * 0.25;
+
+    // Auto-fire on mobile: shoot every 400ms automatically
+    if (isMobileRef.current) {
+      const now2 = performance.now();
+      if (now2 - s.lastShot >= 400) {
+        s.lastShot = now2;
+        s.bullets.push({ x: s.shooter.x + s.shooter.w / 2 - 3, y: s.shooter.y + 10, vy: -14 });
+        playMagicShot();
+      }
+    }
 
     // Screen shake
     let shakeX = 0, shakeY = 0;
@@ -600,11 +611,9 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
     playMagicShot();
   }
 
-  // Mobile touch movement (canvas tap = shoot)
+  // Mobile touch — canvas tap does nothing (auto-fire handles shooting)
   function handleTouchStart(e: React.TouchEvent<HTMLCanvasElement>) {
-    if (gameState !== "playing") return;
     e.preventDefault();
-    handleCanvasClick();
   }
 
   function handleTouchEnd() {
@@ -614,7 +623,6 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
   // Mobile on-screen button handlers
   function mobileLeft(active: boolean) { gs.current.keys.left = active; }
   function mobileRight(active: boolean) { gs.current.keys.right = active; }
-  function mobileFire() { handleCanvasClick(); }
 
   async function handleSidebarLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -783,30 +791,28 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
                 className="rounded-lg cursor-crosshair"
               />
 
-              {/* Mobile on-screen controls — shown during gameplay */}
+              {/* Mobile on-screen controls — 2 big thumb buttons, auto-fire handles shooting */}
               {gameState === "playing" && isMobile && (
-                <div className="absolute bottom-2 left-0 right-0 flex items-center justify-between px-3 pointer-events-none z-10">
+                <div className="absolute bottom-2 left-0 right-0 flex items-center justify-between px-4 pointer-events-none z-10">
                   {/* Left button */}
                   <button
-                    className="pointer-events-auto rounded-full flex items-center justify-center font-black text-2xl select-none active:scale-90 transition-transform"
-                    style={{ width: 72, height: 72, background: "rgba(0,180,255,0.25)", border: "2px solid rgba(0,212,255,0.5)", color: "#00d4ff", WebkitTapHighlightColor: "transparent" }}
+                    className="pointer-events-auto rounded-2xl flex items-center justify-center font-black text-3xl select-none"
+                    style={{ width: 110, height: 90, background: "rgba(0,180,255,0.2)", border: "2px solid rgba(0,212,255,0.5)", color: "#00d4ff", WebkitTapHighlightColor: "transparent", touchAction: "none" }}
                     onPointerDown={() => mobileLeft(true)}
                     onPointerUp={() => mobileLeft(false)}
                     onPointerLeave={() => mobileLeft(false)}
+                    onPointerCancel={() => mobileLeft(false)}
                   >◀</button>
-                  {/* Fire button */}
-                  <button
-                    className="pointer-events-auto rounded-full flex items-center justify-center font-black text-2xl select-none active:scale-90 transition-transform"
-                    style={{ width: 80, height: 80, background: "rgba(255,50,50,0.25)", border: "2px solid rgba(255,80,80,0.6)", color: "#ff6060", WebkitTapHighlightColor: "transparent" }}
-                    onPointerDown={mobileFire}
-                  >🔫</button>
+                  {/* Auto-fire label in centre */}
+                  <span className="text-white/20 text-[10px] font-bold tracking-widest uppercase pointer-events-none">AUTO</span>
                   {/* Right button */}
                   <button
-                    className="pointer-events-auto rounded-full flex items-center justify-center font-black text-2xl select-none active:scale-90 transition-transform"
-                    style={{ width: 72, height: 72, background: "rgba(0,180,255,0.25)", border: "2px solid rgba(0,212,255,0.5)", color: "#00d4ff", WebkitTapHighlightColor: "transparent" }}
+                    className="pointer-events-auto rounded-2xl flex items-center justify-center font-black text-3xl select-none"
+                    style={{ width: 110, height: 90, background: "rgba(0,180,255,0.2)", border: "2px solid rgba(0,212,255,0.5)", color: "#00d4ff", WebkitTapHighlightColor: "transparent", touchAction: "none" }}
                     onPointerDown={() => mobileRight(true)}
                     onPointerUp={() => mobileRight(false)}
                     onPointerLeave={() => mobileRight(false)}
+                    onPointerCancel={() => mobileRight(false)}
                   >▶</button>
                 </div>
               )}
@@ -823,7 +829,7 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
                     <h3 className="text-2xl sm:text-3xl font-black text-white tracking-widest mb-4">ZOMBIE FIGHTER</h3>
                     {isMobile ? (
                       <p className="text-white/40 text-xs mb-5">
-                        Use ◀ ▶ buttons to move · 🔫 to shoot
+                        Hold ◀ ▶ to move · gun fires automatically
                       </p>
                     ) : (
                       <p className="text-white/40 text-xs sm:text-sm mb-5">
