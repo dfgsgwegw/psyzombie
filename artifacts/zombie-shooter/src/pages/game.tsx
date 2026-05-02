@@ -678,13 +678,14 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
       }
       ctx.restore();
 
-      // Muzzle flash when shooting — colour matches current character
+      // Muzzle flash when shooting — at gun tip (top-centre of sprite)
       if (performance.now() - s.lastShot < 120) {
-        const flashX = dir === 1 ? sh.x + sh.w * 0.72 : sh.x + sh.w * 0.28;
-        const flashY = sh.y + sh.h * 0.1;
+        const flashX = sh.x + sh.w * 0.5;   // centre — gun points straight up
+        const flashY = sh.y - 4;             // just above the sprite top
         const charId = CHARACTERS[selectedCharRef.current]?.id ?? "og";
         const flashColors: Record<string, [string, string, string]> = {
           og:    ["rgba(255,180,255,1)", "rgba(200,80,255,0.7)",  "rgba(120,0,200,0)"],
+          mvp:   ["rgba(180,220,255,1)", "rgba(40,140,255,0.8)",  "rgba(0,60,200,0)"],
           stone: ["rgba(230,230,230,1)", "rgba(150,150,150,0.7)", "rgba(60,60,60,0)"],
           fire:  ["rgba(255,255,160,1)", "rgba(255,120,0,0.8)",   "rgba(180,0,0,0)"],
           squad: ["rgba(255,255,255,1)", "rgba(180,100,255,0.7)", "rgba(255,80,180,0)"],
@@ -692,13 +693,13 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
         const [c0, c1, c2] = flashColors[charId] ?? flashColors.og;
         ctx.save();
         ctx.globalAlpha = 0.9;
-        const flash = ctx.createRadialGradient(flashX, flashY, 0, flashX, flashY, 20);
+        const flash = ctx.createRadialGradient(flashX, flashY, 0, flashX, flashY, 22);
         flash.addColorStop(0, c0);
         flash.addColorStop(0.5, c1);
         flash.addColorStop(1, c2);
         ctx.fillStyle = flash;
         ctx.beginPath();
-        ctx.arc(flashX, flashY, 20, 0, Math.PI * 2);
+        ctx.arc(flashX, flashY, 22, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       }
