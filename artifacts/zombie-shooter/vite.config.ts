@@ -33,7 +33,7 @@ const apiBase = replitDevDomain ? `https://${replitDevDomain}` : "";
 export default defineConfig({
   base: basePath,
   define: {
-    "import.meta.env.VITE_API_URL": JSON.stringify(apiBase),
+    __API_BASE__: JSON.stringify(apiBase),
   },
   plugins: [
     react(),
