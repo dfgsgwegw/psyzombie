@@ -6,32 +6,6 @@ import { requireAdmin } from "../middlewares/auth";
 
 const router: IRouter = Router();
 
-router.post("/admin/users", requireAdmin, async (req, res) => {
-  const { discordUsername, password, isAdmin } = req.body as {
-    discordUsername?: string;
-    password?: string;
-    isAdmin?: boolean;
-  };
-
-  if (!discordUsername || !password) {
-    res.status(400).json({ error: "discordUsername and password are required" });
-    return;
-  }
-
-  const passwordHash = await bcrypt.hash(password, 12);
-
-  try {
-    const [user] = await db
-      .insert(usersTable)
-      .values({ discordUsername, passwordHash, isAdmin: isAdmin ?? false })
-      .returning({ id: usersTable.id, discordUsername: usersTable.discordUsername });
-
-    res.json({ ok: true, user });
-  } catch {
-    res.status(409).json({ error: "Username already exists" });
-  }
-});
-
 router.get("/admin/users", requireAdmin, async (_req, res) => {
   const users = await db
     .select({
@@ -57,14 +31,20 @@ router.delete("/admin/users/:id", requireAdmin, async (req, res) => {
 });
 
 router.post("/admin/tournament", requireAdmin, async (req, res) => {
-  const { name, startTime, endTime } = req.body as {
+  const { name, startTime, endTime, joinPassword } = req.body as {
     name?: string;
     startTime?: string;
     endTime?: string;
+    joinPassword?: string;
   };
 
-  if (!name || !startTime || !endTime) {
-    res.status(400).json({ error: "name, startTime, and endTime are required" });
+  if (!name || !startTime || !endTime || !joinPassword) {
+    res.status(400).json({ error: "name, startTime, endTime, and joinPassword are required" });
+    return;
+  }
+
+  if (joinPassword.length < 4) {
+    res.status(400).json({ error: "Join password must be at least 4 characters" });
     return;
   }
 
@@ -78,7 +58,7 @@ router.post("/admin/tournament", requireAdmin, async (req, res) => {
 
   const [tournament] = await db
     .insert(tournamentsTable)
-    .values({ name, startTime: start, endTime: end })
+    .values({ name, joinPassword, startTime: start, endTime: end })
     .returning();
 
   res.json({ ok: true, tournament });

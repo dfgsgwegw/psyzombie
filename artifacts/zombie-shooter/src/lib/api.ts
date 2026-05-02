@@ -40,11 +40,14 @@ export interface LoginResponse {
   token: string;
   discordUsername: string;
   isAdmin: boolean;
+  tournamentId?: number;
+  tournamentName?: string;
 }
 
 export interface Tournament {
   id: number;
   name: string;
+  joinPassword: string;
   startTime: string;
   endTime: string;
 }
@@ -90,17 +93,13 @@ export const api = {
     req<LeaderboardResponse>("GET", "/leaderboard"),
 
   admin: {
-    createUser: (discordUsername: string, password: string, isAdmin = false) =>
-      req<{ ok: boolean; user: { id: number; discordUsername: string } }>(
-        "POST", "/admin/users", { discordUsername, password, isAdmin }, true,
-      ),
     listUsers: () =>
       req<{ users: AdminUser[] }>("GET", "/admin/users", undefined, true),
     deleteUser: (id: number) =>
       req<{ ok: boolean }>("DELETE", `/admin/users/${id}`, undefined, true),
-    createTournament: (name: string, startTime: string, endTime: string) =>
+    createTournament: (name: string, startTime: string, endTime: string, joinPassword: string) =>
       req<{ ok: boolean; tournament: Tournament }>(
-        "POST", "/admin/tournament", { name, startTime, endTime }, true,
+        "POST", "/admin/tournament", { name, startTime, endTime, joinPassword }, true,
       ),
     listTournaments: () =>
       req<{ tournaments: Tournament[] }>("GET", "/admin/tournaments", undefined, true),
