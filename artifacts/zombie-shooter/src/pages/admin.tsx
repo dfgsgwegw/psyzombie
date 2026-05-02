@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { api, AdminUser, Tournament } from "@/lib/api";
+import { api, AdminUser, Tournament, LeaderboardEntry } from "@/lib/api";
+
+const MEDAL: Record<number, string> = { 1: "🥇", 2: "🥈", 3: "🥉" };
 
 interface Props {
   onBack: () => void;
@@ -54,6 +56,24 @@ export default function AdminPage({ onBack }: Props) {
   const [pwErr, setPwErr] = useState("");
 
   const [revealedPw, setRevealedPw] = useState<Record<number, boolean>>({});
+  const [expandedLb, setExpandedLb] = useState<Record<number, boolean>>({});
+  const [lbData, setLbData] = useState<Record<number, LeaderboardEntry[]>>({});
+  const [lbLoading, setLbLoading] = useState<Record<number, boolean>>({});
+
+  async function toggleLeaderboard(id: number) {
+    if (expandedLb[id]) {
+      setExpandedLb((prev) => ({ ...prev, [id]: false }));
+      return;
+    }
+    setExpandedLb((prev) => ({ ...prev, [id]: true }));
+    if (lbData[id]) return;
+    setLbLoading((prev) => ({ ...prev, [id]: true }));
+    try {
+      const { leaderboard } = await api.admin.tournamentLeaderboard(id);
+      setLbData((prev) => ({ ...prev, [id]: leaderboard }));
+    } catch {}
+    setLbLoading((prev) => ({ ...prev, [id]: false }));
+  }
 
   async function loadData() {
     try {
@@ -275,6 +295,49 @@ export default function AdminPage({ onBack }: Props) {
                             {revealedPw[t.id] ? "hide" : "reveal"}
                           </button>
                         </div>
+
+                        <button
+                          onClick={() => toggleLeaderboard(t.id)}
+                          className="w-full text-left text-xs font-bold tracking-widest uppercase px-3 py-2 rounded border border-cyan-500/20 text-cyan-400/70 hover:text-cyan-400 hover:border-cyan-500/40 transition flex items-center justify-between"
+                        >
+                          <span>🏆 {expandedLb[t.id] ? "Hide" : "View"} Results</span>
+                          <span>{expandedLb[t.id] ? "▲" : "▼"}</span>
+                        </button>
+
+                        {expandedLb[t.id] && (
+                          <div className="bg-black/40 rounded border border-cyan-500/15 overflow-hidden">
+                            {lbLoading[t.id] ? (
+                              <p className="text-white/30 text-xs text-center py-4">Loading…</p>
+                            ) : !lbData[t.id] || lbData[t.id].length === 0 ? (
+                              <p className="text-white/25 text-xs text-center py-4">🧟 No scores recorded</p>
+                            ) : (
+                              <table className="w-full text-xs">
+                                <thead>
+                                  <tr className="border-b border-white/10 text-white/30 uppercase tracking-widest">
+                                    <th className="px-3 py-1.5 text-left">Rank</th>
+                                    <th className="px-3 py-1.5 text-left">Player</th>
+                                    <th className="px-3 py-1.5 text-right">Best Score</th>
+                                    <th className="px-3 py-1.5 text-right">Games</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {lbData[t.id].map((e) => (
+                                    <tr key={e.discordUsername} className="border-b border-white/5 hover:bg-white/5">
+                                      <td className="px-3 py-1.5 font-black">
+                                        {MEDAL[e.rank] ?? <span className="text-white/30">#{e.rank}</span>}
+                                      </td>
+                                      <td className={`px-3 py-1.5 font-bold ${e.rank <= 3 ? "text-white" : "text-white/60"}`}>
+                                        {e.discordUsername}
+                                      </td>
+                                      <td className="px-3 py-1.5 text-right font-black text-yellow-400">{e.bestScore}</td>
+                                      <td className="px-3 py-1.5 text-right text-white/30">{e.gamesPlayed}×</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            )}
+                          </div>
+                        )}
                       </div>
                     );
                   })}

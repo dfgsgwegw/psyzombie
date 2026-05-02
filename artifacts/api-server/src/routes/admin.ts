@@ -1,7 +1,7 @@
 import { Router } from "express";
 import bcrypt from "bcryptjs";
-import { db, usersTable, tournamentsTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { db, usersTable, tournamentsTable, scoresTable } from "@workspace/db";
+import { eq, sql } from "drizzle-orm";
 import { requireAdmin } from "../middlewares/auth.js";
 
 const router = Router();
@@ -81,6 +81,28 @@ router.delete("/admin/tournaments/:id", requireAdmin, async (req, res) => {
   }
   await db.delete(tournamentsTable).where(eq(tournamentsTable.id, id));
   res.json({ ok: true });
+});
+
+router.get("/admin/tournaments/:id/leaderboard", requireAdmin, async (req, res) => {
+  const id = Number(req.params.id);
+  if (isNaN(id)) {
+    res.status(400).json({ error: "Invalid tournament id" });
+    return;
+  }
+  const leaderboard = await db
+    .select({
+      rank: sql<number>`RANK() OVER (ORDER BY MAX(${scoresTable.score}) DESC)`,
+      discordUsername: usersTable.discordUsername,
+      bestScore: sql<number>`MAX(${scoresTable.score})`,
+      gamesPlayed: sql<number>`COUNT(${scoresTable.id})`,
+    })
+    .from(scoresTable)
+    .innerJoin(usersTable, eq(scoresTable.userId, usersTable.id))
+    .where(eq(scoresTable.tournamentId, id))
+    .groupBy(usersTable.discordUsername)
+    .orderBy(sql`MAX(${scoresTable.score}) DESC`)
+    .limit(50);
+  res.json({ leaderboard });
 });
 
 router.post("/admin/change-password", requireAdmin, async (req, res) => {
