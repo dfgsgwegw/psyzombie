@@ -224,6 +224,7 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
     lastShot: 0,
     diffMult: 1,
     screenShake: 0,
+    lastDir: 1 as 1 | -1,
   });
 
   const shooterImg = useRef(new Image());
@@ -417,8 +418,8 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
     // Shooter movement (arrow keys OR A/D)
     const movingLeft = s.keys.a || s.keys.left;
     const movingRight = s.keys.d || s.keys.right;
-    if (movingLeft && s.shooter.x > 0) s.shooter.x -= s.shooter.speed;
-    if (movingRight && s.shooter.x < CW - s.shooter.w) s.shooter.x += s.shooter.speed;
+    if (movingLeft && s.shooter.x > 0) { s.shooter.x -= s.shooter.speed; s.lastDir = -1; }
+    if (movingRight && s.shooter.x < CW - s.shooter.w) { s.shooter.x += s.shooter.speed; s.lastDir = 1; }
 
     // Zombies
     const spawnChance = 0.022 + s.diffMult * 0.006;
@@ -497,8 +498,63 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
       ctx.globalAlpha = 1;
     }
 
-    // Shooter (drawn on top)
-    ctx.drawImage(shooterImg.current, s.shooter.x, s.shooter.y, s.shooter.w, s.shooter.h);
+    // Shooter (drawn on top, flipped to face movement direction)
+    {
+      const sh = s.shooter;
+      const dir = s.lastDir; // 1 = right, -1 = left
+      ctx.save();
+      if (dir === -1) {
+        // Flip horizontally around the shooter's center
+        ctx.translate(sh.x + sh.w, 0);
+        ctx.scale(-1, 1);
+        ctx.drawImage(shooterImg.current, 0, sh.y, sh.w, sh.h);
+      } else {
+        ctx.drawImage(shooterImg.current, sh.x, sh.y, sh.w, sh.h);
+      }
+      // Draw gun in the raised hand (right hand of the character = left side when flipped)
+      // Gun position: upper-right of the character sprite (where the staff/hand is)
+      const gx = dir === 1 ? sh.x + sh.w * 0.72 : sh.x - sh.w * 0.12;
+      const gy = sh.y + sh.h * 0.35;
+      const gunDir = dir; // 1 = pointing right/up-right, -1 = pointing left/up-left
+      ctx.restore();
+      ctx.save();
+      ctx.translate(gx, gy);
+      // Rotate gun upward toward zombies with slight outward tilt
+      ctx.rotate(-Math.PI / 2 + gunDir * 0.32);
+      // Gun body
+      ctx.fillStyle = "#1a1a2e";
+      ctx.beginPath();
+      ctx.roundRect(-5, -18, 10, 22, 3);
+      ctx.fill();
+      // Barrel
+      ctx.fillStyle = "#374151";
+      ctx.beginPath();
+      ctx.roundRect(-3, -32, 6, 18, 2);
+      ctx.fill();
+      // Handle grip
+      ctx.fillStyle = "#4b2e0d";
+      ctx.beginPath();
+      ctx.roundRect(-4, 3, 8, 12, 2);
+      ctx.fill();
+      // Trigger guard
+      ctx.strokeStyle = "#374151";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, 4, 5, 0, Math.PI);
+      ctx.stroke();
+      // Muzzle flash when just shot
+      if (performance.now() - s.lastShot < 80) {
+        ctx.fillStyle = "rgba(255,220,80,0.9)";
+        ctx.beginPath();
+        ctx.ellipse(0, -32, 5, 8, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "rgba(255,255,200,0.6)";
+        ctx.beginPath();
+        ctx.ellipse(0, -34, 3, 5, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
 
     // HUD
     drawHud(ctx, s.pts, s.hp);
