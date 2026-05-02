@@ -131,6 +131,46 @@ function playDamage() {
   } catch {}
 }
 
+function playZombieScream() {
+  try {
+    const ctx = getAudioCtx();
+    const t = ctx.currentTime;
+    // Piercing shriek — high freq sweeping down fast
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const dist = ctx.createWaveShaper();
+    const curve = new Float32Array(256);
+    for (let i = 0; i < 256; i++) { const x = (i * 2) / 256 - 1; curve[i] = (Math.PI + 200) * x / (Math.PI + 200 * Math.abs(x)); }
+    dist.curve = curve;
+    osc.type = "sawtooth";
+    const pitch = 520 + Math.random() * 200;
+    osc.frequency.setValueAtTime(pitch, t);
+    osc.frequency.exponentialRampToValueAtTime(pitch * 0.35, t + 0.55);
+    gain.gain.setValueAtTime(0.0, t);
+    gain.gain.linearRampToValueAtTime(0.28, t + 0.04);
+    gain.gain.setValueAtTime(0.28, t + 0.1);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.65);
+    osc.connect(dist);
+    dist.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(t);
+    osc.stop(t + 0.65);
+    // second warble oscillator for creepy vibrato
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = "sine";
+    osc2.frequency.setValueAtTime(pitch * 1.5, t);
+    osc2.frequency.exponentialRampToValueAtTime(pitch * 0.5, t + 0.55);
+    gain2.gain.setValueAtTime(0.0, t);
+    gain2.gain.linearRampToValueAtTime(0.12, t + 0.05);
+    gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.start(t);
+    osc2.stop(t + 0.65);
+  } catch {}
+}
+
 /* ── Timer ─────────────────────────────────────────────────────── */
 function fmt(ms: number): string {
   if (ms <= 0) return "00:00:00";
@@ -559,6 +599,7 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
       const speed = (4.0 + Math.random() * 3.0) * s.diffMult;
       s.zombies.push({ x: Math.random() * (CW - sz), y: -sz, w: sz, h: sz, speed, hp: 1, flash: 0, phase: Math.random() * Math.PI * 2 });
       if (Math.random() < 0.3) playZombieMoan();
+      if (Math.random() < 0.12) playZombieScream();
     }
 
     for (let i = s.zombies.length - 1; i >= 0; i--) {
