@@ -263,8 +263,12 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
 
   useEffect(() => {
     if (!tournament) return;
+    const startMs = new Date(tournament.startTime).getTime();
     const endMs = new Date(tournament.endTime).getTime();
-    const tick = () => setTimeLeft(fmt(Math.max(0, endMs - Date.now())));
+    const tick = () => {
+      const targetMs = tournamentStatus === "upcoming" ? startMs : endMs;
+      setTimeLeft(fmt(Math.max(0, targetMs - Date.now())));
+    };
     tick();
     const t = setInterval(tick, 1000);
 
@@ -297,7 +301,7 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
       clearInterval(t);
       if (endTimer) clearTimeout(endTimer);
     };
-  }, [tournament, fetchLeaderboard]);
+  }, [tournament, tournamentStatus, fetchLeaderboard]);
 
   async function startGame() {
     try { const { sessionToken } = await api.startSession(); sessionTokenRef.current = sessionToken; } catch { return; }
