@@ -315,6 +315,7 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
   }
 
   function startDemoGame() {
+    if (loggedIn) return;
     sessionTokenRef.current = null;
     const s = gs.current;
     s.shooter = { x: CW / 2 - 48, y: CH - 110, w: 96, h: 96, speed: 14 };
@@ -801,6 +802,8 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
 
   const user = getAuth();
   const canPlay = tournamentStatus === "active";
+  const canStartTournament = loggedIn && canPlay;
+  const tournamentWaiting = loggedIn && tournamentStatus === "upcoming";
 
   const overlayBg: React.CSSProperties = {
     backgroundImage: "url('/assets/background.png')",
@@ -1128,7 +1131,7 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
                         Score invalidated — DevTools detected.
                       </p>
                     )}
-                    {playMode === "demo" ? (
+                      {playMode === "demo" ? (
                       <div className="mb-4">
                         <p className="text-white/40 text-xs mb-3 border border-white/10 rounded px-3 py-2">
                           🎮 Demo mode — score not saved
@@ -1146,7 +1149,7 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
                             {submitting ? "Saving..." : "Submit Score"}
                           </button>
                         )}
-                        {submitted && <p className="text-cyan-400 font-bold mb-3">✓ Score submitted!</p>}
+                        {submitted && <p className="text-cyan-400 font-bold mb-3">✓ Score submitted automatically!</p>}
                         {submitError && <p className="text-red-400 text-xs mb-3">{submitError}</p>}
                       </>
                     )}
