@@ -17,11 +17,11 @@ const CW = 780;
 const CH = 560;
 
 const CHARACTERS = [
-  { id: "og",    name: "OG Pod",    src: "/assets/shooter.png",                       shooterSrc: "/assets/shooter.png",                                  color: "#b060ff", bg: "rgba(140,60,255,0.25)" },
-  { id: "mvp",   name: "POD MVP",   src: "/assets/characters/pod-mvp.jpg",            shooterSrc: "/assets/characters/pod-mvp-shooter.png",               color: "#4499ff", bg: "rgba(40,120,255,0.25)" },
-  { id: "stone", name: "Stone Pod", src: "/assets/characters/stone-pod.jpg",          shooterSrc: "/assets/characters/stone-pod-shooter.png",             color: "#aaaaaa", bg: "rgba(150,150,150,0.25)" },
-  { id: "fire",  name: "Fire Pod",  src: "/assets/characters/fire-pod.jpg",           shooterSrc: "/assets/characters/fire-pod-shooter.png",              color: "#ff6600", bg: "rgba(255,80,0,0.25)" },
-  { id: "squad", name: "The Squad", src: "/assets/characters/squad-pod.jpg",          shooterSrc: "/assets/characters/squad-pod-shooter.png",             color: "#ff88cc", bg: "rgba(255,80,180,0.25)" },
+  { id: "og",    name: "PSY OG",    src: "/assets/shooter.png",                       shooterSrc: "/assets/shooter.png",                                  color: "#b060ff", bg: "rgba(140,60,255,0.25)" },
+  { id: "mvp",   name: "PSY MVP",   src: "/assets/characters/pod-mvp.jpg",            shooterSrc: "/assets/characters/pod-mvp-shooter.png",               color: "#4499ff", bg: "rgba(40,120,255,0.25)" },
+  { id: "stone", name: "Stone ψ",   src: "/assets/characters/stone-pod.jpg",          shooterSrc: "/assets/characters/stone-pod-shooter.png",             color: "#aaaaaa", bg: "rgba(150,150,150,0.25)" },
+  { id: "fire",  name: "Fire ψ",    src: "/assets/characters/fire-pod.jpg",           shooterSrc: "/assets/characters/fire-pod-shooter.png",              color: "#ff6600", bg: "rgba(255,80,0,0.25)" },
+  { id: "squad", name: "PSY Squad", src: "/assets/characters/squad-pod.jpg",          shooterSrc: "/assets/characters/squad-pod-shooter.png",             color: "#ff88cc", bg: "rgba(255,80,180,0.25)" },
 ];
 
 /* ── Audio ─────────────────────────────────────────────────────── */
@@ -225,7 +225,7 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
     charImgs.current = CHARACTERS.map(c => { const img = new Image(); img.src = c.shooterSrc; return img; });
     shooterImg.current = charImgs.current[0];
     zombieImg.current.src = "/assets/zombie.png";
-    bgImg.current.src = "/assets/background.png";
+    bgImg.current.src = "/assets/background.svg";
 
     // Detect mobile/touch device
     const mq = window.matchMedia("(max-width: 639px)");
@@ -826,7 +826,7 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
   const tournamentStartingSoon = loggedIn && tournamentStatus === "upcoming";
 
   const overlayBg: React.CSSProperties = {
-    backgroundImage: "url('/assets/background.png')",
+    backgroundImage: "url('/assets/background.svg')",
     backgroundSize: "cover",
     backgroundPosition: "center",
   };
@@ -900,7 +900,7 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
         </span>
         <h1 className="font-black tracking-widest text-xs sm:text-sm flex-shrink-0"
           style={{ color: "#00d4ff", textShadow: "0 0 12px rgba(0,212,255,0.6)" }}>
-          🌊 PACIFIC ZOMBIE FIGHTER
+          ψ PSY ZOMBIE FIGHTER
         </h1>
         <div className="flex items-center gap-2 flex-shrink-0">
           {/* Mobile sidebar toggle */}
@@ -1002,17 +1002,20 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
                   <div className="relative z-10 w-full max-w-lg mx-2 flex flex-col items-center">
 
                     {/* ── POSTER HEADER ── */}
-                    <p className="text-[10px] sm:text-xs font-black tracking-[0.3em] mb-1" style={{ color: "rgba(0,200,255,0.55)" }}>
-                      PACIFIC POD NFT PRESENTS
-                    </p>
+                    <div className="flex items-center justify-center gap-2 mb-1">
+                      <img src="/assets/psy-logo.png" alt="PSY" style={{ width: 32, height: 32, borderRadius: 8, objectFit: "cover" }} />
+                      <p className="text-[10px] sm:text-xs font-black tracking-[0.3em]" style={{ color: "rgba(0,200,255,0.55)" }}>
+                        PSY PRESENTS
+                      </p>
+                    </div>
                     <div className="text-center leading-none mb-0.5">
                       <span className="block font-black tracking-[0.25em] text-4xl sm:text-5xl"
                         style={{ color: "#00d4ff", textShadow: "0 0 40px rgba(0,212,255,0.9), 0 0 80px rgba(0,150,255,0.4)" }}>
-                        PACIFIC PODS
+                        PSY
                       </span>
                       <span className="block font-black tracking-[0.15em] text-2xl sm:text-3xl text-white mt-0.5"
                         style={{ textShadow: "0 0 20px rgba(255,255,255,0.3)" }}>
-                        ZOMBIE SHOOTER
+                        ZOMBIE FIGHTER
                       </span>
                     </div>
                     <div className="flex gap-1 mb-3 mt-1">
@@ -1049,7 +1052,7 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
                       style={{ background: "rgba(0,8,20,0.85)", borderColor: "rgba(0,200,255,0.2)" }}>
                       <p className="text-[10px] font-black tracking-widest uppercase text-center py-1.5"
                         style={{ color: "rgba(0,200,255,0.6)", background: "rgba(0,40,70,0.5)", borderBottom: "1px solid rgba(0,200,255,0.15)" }}>
-                        ⚡ Choose Your Pod
+                        ⚡ Choose Your Fighter
                       </p>
                       <div className="flex justify-center gap-2 p-3 flex-wrap">
                         {CHARACTERS.map((c, i) => (
@@ -1100,7 +1103,7 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
                         <button onClick={startGame}
                           className="font-black py-3 rounded-xl text-base tracking-widest uppercase text-black transition w-full"
                           style={{ background: `linear-gradient(135deg, ${CHARACTERS[selectedChar].color}, #0080ff)`, boxShadow: `0 0 24px ${CHARACTERS[selectedChar].color}66` }}>
-                          ⚔️ Enter the Deep
+                          ⚔️ Enter the Arena
                         </button>
                       )}
                       {loggedIn && !canPlay && (

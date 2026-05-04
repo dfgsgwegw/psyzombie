@@ -148,11 +148,14 @@ export default function AdminPage({ onBack }: Props) {
         <div className="flex items-center gap-4 mb-6 pt-4">
           <button
             onClick={onBack}
-            className="text-green-400 hover:text-green-300 text-sm tracking-widest uppercase border border-green-500/30 px-4 py-2 rounded"
+            className="text-cyan-400 hover:text-cyan-300 text-sm tracking-widest uppercase border border-cyan-500/30 px-4 py-2 rounded"
           >
             ← Back
           </button>
-          <h1 className="text-2xl font-black text-green-400 tracking-widest">ADMIN PANEL</h1>
+          <div className="flex items-center gap-2">
+            <img src="/assets/psy-logo.png" alt="PSY" className="w-7 h-7 rounded-lg" />
+            <h1 className="text-2xl font-black text-cyan-400 tracking-widest">ADMIN PANEL</h1>
+          </div>
         </div>
 
         <div className="flex mb-6 border-b border-white/10">
@@ -162,7 +165,7 @@ export default function AdminPage({ onBack }: Props) {
               onClick={() => setTab(t)}
               className={`px-6 py-3 font-bold tracking-widest uppercase text-sm transition ${
                 tab === t
-                  ? "border-b-2 border-green-400 text-green-400"
+                  ? "border-b-2 border-cyan-400 text-cyan-400"
                   : "text-white/40 hover:text-white/70"
               }`}
             >
@@ -179,18 +182,18 @@ export default function AdminPage({ onBack }: Props) {
             >
               <h2 className="font-bold text-white/80 tracking-wider">Create Tournament</h2>
               <div>
-                <label className="block text-green-400 text-xs font-bold mb-1 tracking-widest uppercase">
+                <label className="block text-cyan-400 text-xs font-bold mb-1 tracking-widest uppercase">
                   Tournament Name
                 </label>
                 <input
                   value={tourneyName}
                   onChange={(e) => setTourneyName(e.target.value)}
                   required
-                  className="w-full bg-black/40 border border-white/10 text-white rounded px-3 py-2 focus:outline-none focus:border-green-400"
+                  className="w-full bg-black/40 border border-white/10 text-white rounded px-3 py-2 focus:outline-none focus:border-cyan-400"
                 />
               </div>
               <div>
-                <label className="block text-green-400 text-xs font-bold mb-1 tracking-widest uppercase">
+                <label className="block text-cyan-400 text-xs font-bold mb-1 tracking-widest uppercase">
                   Join Password
                 </label>
                 <div className="relative">
@@ -201,7 +204,7 @@ export default function AdminPage({ onBack }: Props) {
                     placeholder="Players use this to join"
                     required
                     minLength={4}
-                    className="w-full bg-black/40 border border-white/10 text-white placeholder-white/20 rounded px-3 py-2 pr-20 focus:outline-none focus:border-green-400"
+                    className="w-full bg-black/40 border border-white/10 text-white placeholder-white/20 rounded px-3 py-2 pr-20 focus:outline-none focus:border-cyan-400"
                   />
                   <button
                     type="button"
@@ -217,7 +220,7 @@ export default function AdminPage({ onBack }: Props) {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-green-400 text-xs font-bold mb-1 tracking-widest uppercase">
+                  <label className="block text-cyan-400 text-xs font-bold mb-1 tracking-widest uppercase">
                     Start Time
                   </label>
                   <input
@@ -225,11 +228,11 @@ export default function AdminPage({ onBack }: Props) {
                     value={startTime}
                     onChange={(e) => setStartTime(e.target.value)}
                     required
-                    className="w-full bg-black/40 border border-white/10 text-white rounded px-3 py-2 focus:outline-none focus:border-green-400"
+                    className="w-full bg-black/40 border border-white/10 text-white rounded px-3 py-2 focus:outline-none focus:border-cyan-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-green-400 text-xs font-bold mb-1 tracking-widest uppercase">
+                  <label className="block text-cyan-400 text-xs font-bold mb-1 tracking-widest uppercase">
                     End Time
                   </label>
                   <input
@@ -237,19 +240,19 @@ export default function AdminPage({ onBack }: Props) {
                     value={endTime}
                     onChange={(e) => setEndTime(e.target.value)}
                     required
-                    className="w-full bg-black/40 border border-white/10 text-white rounded px-3 py-2 focus:outline-none focus:border-green-400"
+                    className="w-full bg-black/40 border border-white/10 text-white rounded px-3 py-2 focus:outline-none focus:border-cyan-400"
                   />
                 </div>
               </div>
               {tourneyMsg && (
-                <p className="text-green-400 text-sm bg-green-400/10 border border-green-500/30 rounded p-3">
+                <p className="text-cyan-400 text-sm bg-cyan-400/10 border border-cyan-500/30 rounded p-3">
                   ✓ {tourneyMsg}
                 </p>
               )}
               {tourneyErr && <p className="text-red-400 text-sm">{tourneyErr}</p>}
               <button
                 type="submit"
-                className="w-full bg-green-500 hover:bg-green-400 text-black font-black py-2 rounded tracking-widest uppercase transition"
+                className="w-full bg-cyan-500 hover:bg-cyan-400 text-black font-black py-2 rounded tracking-widest uppercase transition"
               >
                 Create Tournament
               </button>
@@ -398,7 +401,7 @@ export default function AdminPage({ onBack }: Props) {
             >
               <h2 className="font-bold text-white/80 tracking-wider">Change Admin Password</h2>
               <div>
-                <label className="block text-green-400 text-xs font-bold mb-1 tracking-widest uppercase">
+                <label className="block text-cyan-400 text-xs font-bold mb-1 tracking-widest uppercase">
                   Current Password
                 </label>
                 <input
@@ -408,11 +411,11 @@ export default function AdminPage({ onBack }: Props) {
                   placeholder="••••••••"
                   required
                   autoComplete="current-password"
-                  className="w-full bg-black/40 border border-white/10 text-white placeholder-white/20 rounded px-3 py-2 focus:outline-none focus:border-green-400"
+                  className="w-full bg-black/40 border border-white/10 text-white placeholder-white/20 rounded px-3 py-2 focus:outline-none focus:border-cyan-400"
                 />
               </div>
               <div>
-                <label className="block text-green-400 text-xs font-bold mb-1 tracking-widest uppercase">
+                <label className="block text-cyan-400 text-xs font-bold mb-1 tracking-widest uppercase">
                   New Password
                 </label>
                 <input
@@ -422,11 +425,11 @@ export default function AdminPage({ onBack }: Props) {
                   placeholder="••••••••"
                   required
                   autoComplete="new-password"
-                  className="w-full bg-black/40 border border-white/10 text-white placeholder-white/20 rounded px-3 py-2 focus:outline-none focus:border-green-400"
+                  className="w-full bg-black/40 border border-white/10 text-white placeholder-white/20 rounded px-3 py-2 focus:outline-none focus:border-cyan-400"
                 />
               </div>
               <div>
-                <label className="block text-green-400 text-xs font-bold mb-1 tracking-widest uppercase">
+                <label className="block text-cyan-400 text-xs font-bold mb-1 tracking-widest uppercase">
                   Confirm New Password
                 </label>
                 <input
@@ -436,14 +439,14 @@ export default function AdminPage({ onBack }: Props) {
                   placeholder="••••••••"
                   required
                   autoComplete="new-password"
-                  className="w-full bg-black/40 border border-white/10 text-white placeholder-white/20 rounded px-3 py-2 focus:outline-none focus:border-green-400"
+                  className="w-full bg-black/40 border border-white/10 text-white placeholder-white/20 rounded px-3 py-2 focus:outline-none focus:border-cyan-400"
                 />
               </div>
-              {pwMsg && <p className="text-green-400 text-sm">{pwMsg}</p>}
+              {pwMsg && <p className="text-cyan-400 text-sm">{pwMsg}</p>}
               {pwErr && <p className="text-red-400 text-sm">{pwErr}</p>}
               <button
                 type="submit"
-                className="w-full bg-green-500 hover:bg-green-400 text-black font-black py-2 rounded tracking-widest uppercase transition"
+                className="w-full bg-cyan-500 hover:bg-cyan-400 text-black font-black py-2 rounded tracking-widest uppercase transition"
               >
                 Update Password
               </button>

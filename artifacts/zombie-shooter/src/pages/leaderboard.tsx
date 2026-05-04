@@ -62,24 +62,27 @@ export default function LeaderboardPage({ onBack }: Props) {
   return (
     <div
       className="min-h-screen bg-black text-white flex flex-col"
-      style={{ backgroundImage: "url('/assets/background.png')", backgroundSize: "cover", backgroundPosition: "center" }}
+      style={{ backgroundImage: "url('/assets/background.svg')", backgroundSize: "cover", backgroundPosition: "center" }}
     >
       <div className="absolute inset-0 bg-black/80" />
       <div className="relative z-10 flex flex-col min-h-screen p-4 max-w-2xl mx-auto w-full">
         <div className="flex items-center justify-between mb-6 pt-4">
           <button
             onClick={onBack}
-            className="text-green-400 hover:text-green-300 text-sm tracking-widest uppercase border border-green-500/30 px-4 py-2 rounded hover:border-green-400 transition"
+            className="text-cyan-400 hover:text-cyan-300 text-sm tracking-widest uppercase border border-cyan-500/30 px-4 py-2 rounded hover:border-cyan-400 transition"
           >
             ← Back
           </button>
-          <h1 className="text-2xl font-black text-green-400 tracking-widest">LEADERBOARD</h1>
+          <div className="flex items-center gap-2">
+            <img src="/assets/psy-logo.png" alt="PSY" className="w-7 h-7 rounded-lg" />
+            <h1 className="text-2xl font-black text-cyan-400 tracking-widest">LEADERBOARD</h1>
+          </div>
           <div className="w-24" />
         </div>
 
         {tournament && (
-          <div className="bg-black/60 border border-green-500/30 rounded-lg p-4 mb-6 text-center">
-            <p className="text-green-400 font-bold tracking-wider">{tournament.name}</p>
+          <div className="bg-black/60 border border-cyan-500/30 rounded-lg p-4 mb-6 text-center">
+            <p className="text-cyan-400 font-bold tracking-wider">{tournament.name}</p>
             <p className="text-white/60 text-sm mt-1">
               {new Date(tournament.endTime) > new Date()
                 ? `Time remaining: `
@@ -90,7 +93,7 @@ export default function LeaderboardPage({ onBack }: Props) {
         )}
 
         {loading ? (
-          <div className="flex-1 flex items-center justify-center text-green-400/60">
+          <div className="flex-1 flex items-center justify-center text-cyan-400/60">
             Loading...
           </div>
         ) : leaderboard.length === 0 ? (
@@ -109,7 +112,7 @@ export default function LeaderboardPage({ onBack }: Props) {
                   key={entry.discordUsername}
                   className={`flex items-center gap-4 p-4 rounded-lg border transition ${
                     isMe
-                      ? "border-green-400/60 bg-green-900/20"
+                      ? "border-cyan-400/60 bg-cyan-900/20"
                       : "border-white/10 bg-black/40"
                   }`}
                 >
@@ -117,9 +120,9 @@ export default function LeaderboardPage({ onBack }: Props) {
                     {rankEmojis[entry.rank] ?? `#${entry.rank}`}
                   </div>
                   <div className="flex-1">
-                    <p className={`font-bold ${isMe ? "text-green-400" : "text-white"}`}>
+                    <p className={`font-bold ${isMe ? "text-cyan-400" : "text-white"}`}>
                       {entry.discordUsername}
-                      {isMe && <span className="ml-2 text-xs text-green-500/70">(you)</span>}
+                      {isMe && <span className="ml-2 text-xs text-cyan-500/70">(you)</span>}
                     </p>
                     <p className="text-white/40 text-xs mt-0.5">
                       {entry.gamesPlayed} game{entry.gamesPlayed !== 1 ? "s" : ""} played
