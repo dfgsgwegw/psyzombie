@@ -1,0 +1,32 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "ktYELJsH64Fv8lAjrxHRf"
+uri = "file://artifacts/zombie-shooter/public/characters/psy_og.png"
+type = "image"
+title = "psy og shooter"
+
+[[generated]]
+id = "sJAec3EFrHS8cJA5wGtLu"
+uri = "file://artifacts/zombie-shooter/public/characters/psy_mvp.png"
+type = "image"
+title = "psy mvp shooter"
+
+[[generated]]
+id = "5jRUQCFXg1Gz-e6Gf1oKG"
+uri = "file://artifacts/zombie-shooter/public/characters/psy_stone.png"
+type = "image"
+title = "psy stone shooter"
+
+[[generated]]
+id = "Tpt0ceXF9lhm6eNmjaTTX"
+uri = "file://artifacts/zombie-shooter/public/characters/psy_fire.png"
+type = "image"
+title = "psy fire shooter"
+
+[[generated]]
+id = "mUaWVeK8k3kmzMhv-kPQv"
+uri = "file://artifacts/zombie-shooter/public/characters/psy_squad.png"
+type = "image"
+title = "psy squad shooter"
