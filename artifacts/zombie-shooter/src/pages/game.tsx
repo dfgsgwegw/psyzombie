@@ -692,10 +692,10 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
       }
       ctx.restore();
 
-      // Muzzle flash when shooting — at gun tip (top-centre of sprite)
+      // Muzzle flash — positioned at the bullet spawn point (gun barrel tip)
       if (performance.now() - s.lastShot < 120) {
-        const flashX = sh.x + sh.w * 0.5;   // centre — gun points straight up
-        const flashY = sh.y - 4;             // just above the sprite top
+        const flashX = sh.x + sh.w * 0.5;   // horizontally centred
+        const flashY = sh.y - sh.h * 0.35;  // above the sprite top (gun tip extends overhead)
         const charId = CHARACTERS[selectedCharRef.current]?.id ?? "og";
         const flashColors: Record<string, [string, string, string]> = {
           og:    ["rgba(180,255,255,1)", "rgba(0,212,255,0.8)",   "rgba(0,80,180,0)"],
@@ -705,14 +705,14 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
         };
         const [c0, c1, c2] = flashColors[charId] ?? flashColors.og;
         ctx.save();
-        ctx.globalAlpha = 0.9;
-        const flash = ctx.createRadialGradient(flashX, flashY, 0, flashX, flashY, 22);
+        ctx.globalAlpha = 0.85;
+        const flash = ctx.createRadialGradient(flashX, flashY, 0, flashX, flashY, 13);
         flash.addColorStop(0, c0);
-        flash.addColorStop(0.5, c1);
+        flash.addColorStop(0.45, c1);
         flash.addColorStop(1, c2);
         ctx.fillStyle = flash;
         ctx.beginPath();
-        ctx.arc(flashX, flashY, 22, 0, Math.PI * 2);
+        ctx.arc(flashX, flashY, 13, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       }
