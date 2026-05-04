@@ -698,11 +698,10 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
         const flashY = sh.y - 4;             // just above the sprite top
         const charId = CHARACTERS[selectedCharRef.current]?.id ?? "og";
         const flashColors: Record<string, [string, string, string]> = {
-          og:    ["rgba(255,180,255,1)", "rgba(200,80,255,0.7)",  "rgba(120,0,200,0)"],
-          mvp:   ["rgba(180,220,255,1)", "rgba(40,140,255,0.8)",  "rgba(0,60,200,0)"],
-          stone: ["rgba(230,230,230,1)", "rgba(150,150,150,0.7)", "rgba(60,60,60,0)"],
-          fire:  ["rgba(255,255,160,1)", "rgba(255,120,0,0.8)",   "rgba(180,0,0,0)"],
-          squad: ["rgba(255,255,255,1)", "rgba(180,100,255,0.7)", "rgba(255,80,180,0)"],
+          og:    ["rgba(180,255,255,1)", "rgba(0,212,255,0.8)",   "rgba(0,80,180,0)"],
+          mvp:   ["rgba(255,255,180,1)", "rgba(251,191,36,0.8)",  "rgba(180,100,0,0)"],
+          stone: ["rgba(255,210,140,1)", "rgba(251,146,60,0.8)",  "rgba(120,40,0,0)"],
+          squad: ["rgba(255,180,255,1)", "rgba(232,121,249,0.8)", "rgba(140,0,180,0)"],
         };
         const [c0, c1, c2] = flashColors[charId] ?? flashColors.og;
         ctx.save();
