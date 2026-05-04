@@ -17,11 +17,11 @@ const CW = 780;
 const CH = 560;
 
 const CHARACTERS = [
-  { id: "og",    name: "PSY OG",    src: "/assets/shooter.png",                       shooterSrc: "/assets/shooter.png",                                  color: "#b060ff", bg: "rgba(140,60,255,0.25)" },
-  { id: "mvp",   name: "PSY MVP",   src: "/assets/characters/pod-mvp.jpg",            shooterSrc: "/assets/characters/pod-mvp-shooter.png",               color: "#4499ff", bg: "rgba(40,120,255,0.25)" },
-  { id: "stone", name: "Stone ψ",   src: "/assets/characters/stone-pod.jpg",          shooterSrc: "/assets/characters/stone-pod-shooter.png",             color: "#aaaaaa", bg: "rgba(150,150,150,0.25)" },
-  { id: "fire",  name: "Fire ψ",    src: "/assets/characters/fire-pod.jpg",           shooterSrc: "/assets/characters/fire-pod-shooter.png",              color: "#ff6600", bg: "rgba(255,80,0,0.25)" },
-  { id: "squad", name: "PSY Squad", src: "/assets/characters/squad-pod.jpg",          shooterSrc: "/assets/characters/squad-pod-shooter.png",             color: "#ff88cc", bg: "rgba(255,80,180,0.25)" },
+  { id: "og",    name: "PSY OG",    src: "/assets/characters/psy-og.svg",    shooterSrc: "/assets/characters/psy-og.svg",    color: "#b060ff", bg: "rgba(140,60,255,0.25)" },
+  { id: "mvp",   name: "PSY MVP",   src: "/assets/characters/psy-mvp.svg",   shooterSrc: "/assets/characters/psy-mvp.svg",   color: "#4499ff", bg: "rgba(40,120,255,0.25)" },
+  { id: "stone", name: "Stone ψ",   src: "/assets/characters/psy-stone.svg", shooterSrc: "/assets/characters/psy-stone.svg", color: "#aaaaaa", bg: "rgba(150,150,150,0.25)" },
+  { id: "fire",  name: "Fire ψ",    src: "/assets/characters/psy-fire.svg",  shooterSrc: "/assets/characters/psy-fire.svg",  color: "#ff6600", bg: "rgba(255,80,0,0.25)" },
+  { id: "squad", name: "PSY Squad", src: "/assets/characters/psy-squad.svg", shooterSrc: "/assets/characters/psy-squad.svg", color: "#ff88cc", bg: "rgba(255,80,180,0.25)" },
 ];
 
 /* ── Audio ─────────────────────────────────────────────────────── */

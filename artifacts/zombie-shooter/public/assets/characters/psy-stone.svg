@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 220" width="160" height="220">
+  <defs>
+    <radialGradient id="glow-stone" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#dddddd" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#aaaaaa" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="f-stone">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Body glow -->
+  <ellipse cx="80" cy="140" rx="45" ry="60" fill="url(#glow-stone)" opacity="0.4"/>
+
+  <!-- Legs -->
+  <rect x="58" y="170" width="18" height="40" rx="8" fill="#1a1a1a"/>
+  <rect x="84" y="170" width="18" height="40" rx="8" fill="#1a1a1a"/>
+  <rect x="58" y="196" width="18" height="14" rx="4" fill="#aaaaaa" opacity="0.4"/>
+  <rect x="84" y="196" width="18" height="14" rx="4" fill="#aaaaaa" opacity="0.4"/>
+
+  <!-- Body/torso - chunky/rocky look -->
+  <rect x="48" y="113" width="64" height="62" rx="10" fill="#222222"/>
+  <rect x="48" y="113" width="64" height="62" rx="10" fill="none" stroke="#aaaaaa" stroke-width="1.5" opacity="0.6"/>
+  <!-- Rock texture lines -->
+  <line x1="55" y1="125" x2="70" y2="120" stroke="#aaaaaa" stroke-width="0.8" opacity="0.3"/>
+  <line x1="90" y1="130" x2="105" y2="125" stroke="#aaaaaa" stroke-width="0.8" opacity="0.3"/>
+  <line x1="60" y1="145" x2="80" y2="140" stroke="#aaaaaa" stroke-width="0.8" opacity="0.25"/>
+
+  <!-- Chest ψ emblem -->
+  <text x="80" y="153" font-family="Georgia,serif" font-size="24" fill="#cccccc" text-anchor="middle" opacity="0.9" filter="url(#f-stone)">ψ</text>
+
+  <!-- Left arm (raised with weapon) - thick/blocky -->
+  <rect x="20" y="98" width="16" height="52" rx="6" fill="#222222" stroke="#aaaaaa" stroke-width="1" opacity="0.9"/>
+  <!-- Weapon/staff - stone/crystal spear -->
+  <rect x="26" y="26" width="6" height="78" rx="2" fill="#555555"/>
+  <!-- Crystal tip -->
+  <polygon points="29,10 22,32 36,32" fill="#cccccc" filter="url(#f-stone)"/>
+  <polygon points="29,10 24,28 29,24 34,28" fill="#eeeeee" opacity="0.6"/>
+
+  <!-- Right arm (at side) -->
+  <rect x="124" y="116" width="16" height="42" rx="6" fill="#222222" stroke="#aaaaaa" stroke-width="1" opacity="0.9"/>
+
+  <!-- Neck -->
+  <rect x="71" y="97" width="18" height="20" rx="5" fill="#222222"/>
+
+  <!-- Head - wide/blocky -->
+  <rect x="52" y="58" width="56" height="52" rx="10" fill="#222222" stroke="#aaaaaa" stroke-width="1.5"/>
+  <!-- Visor - single slit -->
+  <rect x="57" y="76" width="46" height="10" rx="5" fill="#aaaaaa" opacity="0.6"/>
+  <rect x="59" y="78" width="42" height="6" rx="3" fill="#dddddd" opacity="0.3"/>
+  <!-- Eyes (single visor) -->
+  <circle cx="69" cy="81" r="3.5" fill="#cccccc"/>
+  <circle cx="91" cy="81" r="3.5" fill="#cccccc"/>
+  <circle cx="69" cy="81" r="1.5" fill="white" opacity="0.8"/>
+  <circle cx="91" cy="81" r="1.5" fill="white" opacity="0.8"/>
+  <!-- Rock cracks on head -->
+  <line x1="65" y1="62" x2="70" y2="72" stroke="#aaaaaa" stroke-width="0.8" opacity="0.4"/>
+  <line x1="95" y1="64" x2="98" y2="75" stroke="#aaaaaa" stroke-width="0.8" opacity="0.3"/>
+
+  <!-- Energy particles -->
+  <circle cx="44" cy="58" r="2.5" fill="#cccccc" opacity="0.6"/>
+  <circle cx="35" cy="78" r="1.5" fill="#aaaaaa" opacity="0.4"/>
+</svg>

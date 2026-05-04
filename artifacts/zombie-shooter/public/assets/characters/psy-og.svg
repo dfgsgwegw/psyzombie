@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 220" width="160" height="220">
+  <defs>
+    <radialGradient id="glow-og" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#d080ff" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#b060ff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="f-og">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Body glow -->
+  <ellipse cx="80" cy="140" rx="45" ry="60" fill="url(#glow-og)" opacity="0.5"/>
+
+  <!-- Legs -->
+  <rect x="58" y="170" width="18" height="40" rx="8" fill="#1a0030"/>
+  <rect x="84" y="170" width="18" height="40" rx="8" fill="#1a0030"/>
+  <!-- Boot highlights -->
+  <rect x="58" y="196" width="18" height="14" rx="4" fill="#b060ff" opacity="0.4"/>
+  <rect x="84" y="196" width="18" height="14" rx="4" fill="#b060ff" opacity="0.4"/>
+
+  <!-- Body/torso -->
+  <rect x="50" y="115" width="60" height="60" rx="14" fill="#2a0050"/>
+  <rect x="50" y="115" width="60" height="60" rx="14" fill="none" stroke="#b060ff" stroke-width="1.5" opacity="0.7"/>
+
+  <!-- Chest ψ emblem -->
+  <text x="80" y="153" font-family="Georgia,serif" font-size="24" fill="#b060ff" text-anchor="middle" opacity="0.9" filter="url(#f-og)">ψ</text>
+
+  <!-- Left arm (raised with weapon) -->
+  <rect x="22" y="100" width="14" height="50" rx="7" fill="#2a0050" stroke="#b060ff" stroke-width="1" opacity="0.9"/>
+  <!-- Weapon/staff -->
+  <rect x="27" y="28" width="6" height="78" rx="3" fill="#9040df"/>
+  <!-- Orb at top -->
+  <circle cx="30" cy="24" r="12" fill="#d080ff" filter="url(#f-og)"/>
+  <circle cx="30" cy="24" r="7" fill="white" opacity="0.5"/>
+  <!-- Glow ring -->
+  <circle cx="30" cy="24" r="16" fill="none" stroke="#d080ff" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- Right arm (at side) -->
+  <rect x="124" y="118" width="14" height="40" rx="7" fill="#2a0050" stroke="#b060ff" stroke-width="1" opacity="0.9"/>
+
+  <!-- Neck -->
+  <rect x="72" y="98" width="16" height="20" rx="6" fill="#2a0050"/>
+
+  <!-- Head -->
+  <ellipse cx="80" cy="82" rx="26" ry="28" fill="#2a0050" stroke="#b060ff" stroke-width="1.5"/>
+  <!-- Visor -->
+  <rect x="60" y="74" width="40" height="14" rx="7" fill="#b060ff" opacity="0.7"/>
+  <rect x="62" y="76" width="36" height="10" rx="5" fill="#e0a0ff" opacity="0.4"/>
+  <!-- Eyes -->
+  <circle cx="69" cy="81" r="4" fill="#b060ff"/>
+  <circle cx="91" cy="81" r="4" fill="#b060ff"/>
+  <circle cx="69" cy="81" r="2" fill="white" opacity="0.7"/>
+  <circle cx="91" cy="81" r="2" fill="white" opacity="0.7"/>
+  <!-- Antenna -->
+  <line x1="80" y1="54" x2="80" y2="38" stroke="#b060ff" stroke-width="2"/>
+  <circle cx="80" cy="35" r="5" fill="#d080ff" filter="url(#f-og)"/>
+
+  <!-- Energy particles -->
+  <circle cx="45" cy="60" r="2.5" fill="#d080ff" opacity="0.7"/>
+  <circle cx="35" cy="80" r="1.5" fill="#d080ff" opacity="0.5"/>
+  <circle cx="50" cy="45" r="2" fill="#b060ff" opacity="0.6"/>
+</svg>

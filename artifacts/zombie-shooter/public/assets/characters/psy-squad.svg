@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 220" width="160" height="220">
+  <defs>
+    <radialGradient id="glow-squad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffaadd" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#ff88cc" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="f-squad">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Body glow -->
+  <ellipse cx="80" cy="140" rx="45" ry="60" fill="url(#glow-squad)" opacity="0.5"/>
+
+  <!-- Legs -->
+  <rect x="58" y="170" width="18" height="40" rx="8" fill="#200018"/>
+  <rect x="84" y="170" width="18" height="40" rx="8" fill="#200018"/>
+  <rect x="58" y="196" width="18" height="14" rx="4" fill="#ff88cc" opacity="0.4"/>
+  <rect x="84" y="196" width="18" height="14" rx="4" fill="#ff88cc" opacity="0.4"/>
+
+  <!-- Body/torso -->
+  <rect x="50" y="115" width="60" height="60" rx="14" fill="#200020"/>
+  <rect x="50" y="115" width="60" height="60" rx="14" fill="none" stroke="#ff88cc" stroke-width="1.5" opacity="0.7"/>
+  <!-- Star details on body -->
+  <text x="80" y="130" font-family="Arial" font-size="10" fill="#ff88cc" text-anchor="middle" opacity="0.5">✦</text>
+  <text x="60" y="145" font-family="Arial" font-size="7" fill="#ff88cc" text-anchor="middle" opacity="0.4">✦</text>
+  <text x="100" y="140" font-family="Arial" font-size="7" fill="#ff88cc" text-anchor="middle" opacity="0.4">✦</text>
+
+  <!-- Chest ψ emblem -->
+  <text x="80" y="153" font-family="Georgia,serif" font-size="24" fill="#ff88cc" text-anchor="middle" opacity="0.9" filter="url(#f-squad)">ψ</text>
+
+  <!-- Left arm (raised with weapon) -->
+  <rect x="22" y="100" width="14" height="50" rx="7" fill="#200020" stroke="#ff88cc" stroke-width="1" opacity="0.9"/>
+  <!-- Wand/staff -->
+  <rect x="27" y="30" width="6" height="76" rx="3" fill="#cc4488"/>
+  <!-- Star wand tip -->
+  <polygon points="30,8 33,18 43,18 35,24 38,34 30,28 22,34 25,24 17,18 27,18" fill="#ff88cc" filter="url(#f-squad)"/>
+  <polygon points="30,12 32,18 38,18 33,22 35,28 30,24 25,28 27,22 22,18 28,18" fill="white" opacity="0.5"/>
+
+  <!-- Right arm (at side) -->
+  <rect x="124" y="118" width="14" height="40" rx="7" fill="#200020" stroke="#ff88cc" stroke-width="1" opacity="0.9"/>
+
+  <!-- Neck -->
+  <rect x="72" y="98" width="16" height="20" rx="6" fill="#200020"/>
+
+  <!-- Head -->
+  <ellipse cx="80" cy="82" rx="26" ry="28" fill="#200020" stroke="#ff88cc" stroke-width="1.5"/>
+  <!-- Visor -->
+  <rect x="60" y="74" width="40" height="14" rx="7" fill="#ff88cc" opacity="0.6"/>
+  <rect x="62" y="76" width="36" height="10" rx="5" fill="#ffccee" opacity="0.4"/>
+  <!-- Eyes -->
+  <circle cx="69" cy="81" r="4" fill="#ff88cc"/>
+  <circle cx="91" cy="81" r="4" fill="#ff88cc"/>
+  <circle cx="69" cy="81" r="2" fill="white" opacity="0.8"/>
+  <circle cx="91" cy="81" r="2" fill="white" opacity="0.8"/>
+  <!-- Hair / bow details -->
+  <ellipse cx="60" cy="62" rx="12" ry="10" fill="#ff88cc" opacity="0.7" filter="url(#f-squad)"/>
+  <ellipse cx="100" cy="62" rx="12" ry="10" fill="#ff88cc" opacity="0.7" filter="url(#f-squad)"/>
+  <circle cx="80" cy="58" rx="6" fill="#ffaadd"/>
+  <!-- Star tiara -->
+  <text x="80" y="66" font-family="Arial" font-size="12" fill="#ffccee" text-anchor="middle" opacity="0.9">✦</text>
+
+  <!-- Energy particles / sparkles -->
+  <text x="40" y="55" font-family="Arial" font-size="10" fill="#ff88cc" opacity="0.7" filter="url(#f-squad)">✦</text>
+  <text x="115" y="70" font-family="Arial" font-size="8" fill="#ffaadd" opacity="0.5">✦</text>
+  <circle cx="35" cy="80" r="1.5" fill="#ff88cc" opacity="0.5"/>
+</svg>
