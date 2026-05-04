@@ -17,11 +17,10 @@ const CW = 780;
 const CH = 560;
 
 const CHARACTERS = [
-  { id: "og",    name: "PSY OG",    src: "/assets/characters/psy-og.svg",    shooterSrc: "/assets/characters/psy-og.svg",    color: "#b060ff", bg: "rgba(140,60,255,0.25)" },
-  { id: "mvp",   name: "PSY MVP",   src: "/assets/characters/psy-mvp.svg",   shooterSrc: "/assets/characters/psy-mvp.svg",   color: "#4499ff", bg: "rgba(40,120,255,0.25)" },
-  { id: "stone", name: "Stone ψ",   src: "/assets/characters/psy-stone.svg", shooterSrc: "/assets/characters/psy-stone.svg", color: "#aaaaaa", bg: "rgba(150,150,150,0.25)" },
-  { id: "fire",  name: "Fire ψ",    src: "/assets/characters/psy-fire.svg",  shooterSrc: "/assets/characters/psy-fire.svg",  color: "#ff6600", bg: "rgba(255,80,0,0.25)" },
-  { id: "squad", name: "PSY Squad", src: "/assets/characters/psy-squad.svg", shooterSrc: "/assets/characters/psy-squad.svg", color: "#ff88cc", bg: "rgba(255,80,180,0.25)" },
+  { id: "og",    name: "PSY OG",    src: "/characters/psy_og.png",    shooterSrc: "/characters/psy_og.png",    color: "#00d4ff", bg: "rgba(0,180,255,0.25)" },
+  { id: "mvp",   name: "PSY MVP",   src: "/characters/psy_mvp.png",   shooterSrc: "/characters/psy_mvp.png",   color: "#fbbf24", bg: "rgba(200,140,0,0.25)" },
+  { id: "stone", name: "Stone ψ",   src: "/characters/psy_stone.png", shooterSrc: "/characters/psy_stone.png", color: "#fb923c", bg: "rgba(200,100,0,0.25)" },
+  { id: "squad", name: "PSY Squad", src: "/characters/psy_squad.png", shooterSrc: "/characters/psy_squad.png", color: "#e879f9", bg: "rgba(200,60,220,0.25)" },
 ];
 
 /* ── Audio ─────────────────────────────────────────────────────── */
@@ -366,42 +365,52 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
   function drawBullet(ctx: CanvasRenderingContext2D, b: Bullet) {
     const cx = b.x + 3, cy = b.y + 6;
 
-    if (b.charId === "fire") {
-      // Fireball — orange/red flame orb with trailing flicker
-      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 13);
-      grad.addColorStop(0, "rgba(255,255,180,1)");
-      grad.addColorStop(0.3, "rgba(255,140,0,0.95)");
-      grad.addColorStop(0.7, "rgba(220,40,0,0.7)");
-      grad.addColorStop(1, "rgba(100,0,0,0)");
+    if (b.charId === "og") {
+      // OG — cyan plasma bolt
+      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 10);
+      grad.addColorStop(0, "rgba(180,255,255,1)");
+      grad.addColorStop(0.4, "rgba(0,212,255,0.85)");
+      grad.addColorStop(1, "rgba(0,80,180,0)");
       ctx.fillStyle = grad;
       ctx.beginPath();
-      ctx.ellipse(cx, cy, 11, 15, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx, cy, 10, 14, 0, 0, Math.PI * 2);
       ctx.fill();
-      // flame tip
-      ctx.fillStyle = "rgba(255,220,80,0.9)";
+      ctx.shadowColor = "#00d4ff";
+      ctx.shadowBlur = 14;
+      ctx.fillStyle = "#fff";
       ctx.beginPath();
-      ctx.ellipse(cx, cy - 8, 4, 7, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx, cy - 2, 3, 5, 0, 0, Math.PI * 2);
       ctx.fill();
-      // glow
-      ctx.shadowColor = "#ff6600";
-      ctx.shadowBlur = 18;
-      ctx.fillStyle = "rgba(255,100,0,0.3)";
+      ctx.shadowBlur = 0;
+
+    } else if (b.charId === "mvp") {
+      // MVP — gold energy burst
+      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 12);
+      grad.addColorStop(0, "rgba(255,255,180,1)");
+      grad.addColorStop(0.4, "rgba(251,191,36,0.9)");
+      grad.addColorStop(1, "rgba(180,100,0,0)");
+      ctx.fillStyle = grad;
       ctx.beginPath();
-      ctx.ellipse(cx, cy, 14, 18, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx, cy, 10, 14, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowColor = "#fbbf24";
+      ctx.shadowBlur = 16;
+      ctx.fillStyle = "rgba(255,255,220,0.9)";
+      ctx.beginPath();
+      ctx.ellipse(cx, cy - 2, 3, 5, 0, 0, Math.PI * 2);
       ctx.fill();
       ctx.shadowBlur = 0;
 
     } else if (b.charId === "stone") {
-      // Rock — grey jagged boulder
+      // Stone — orange jagged boulder
       ctx.save();
       ctx.translate(cx, cy);
       const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, 10);
-      grad.addColorStop(0, "#d0d0d0");
-      grad.addColorStop(0.5, "#888");
-      grad.addColorStop(1, "#444");
+      grad.addColorStop(0, "#ffb347");
+      grad.addColorStop(0.5, "#fb923c");
+      grad.addColorStop(1, "#7c2d12");
       ctx.fillStyle = grad;
       ctx.beginPath();
-      // jagged polygon for rock shape
       ctx.moveTo(0, -12);
       ctx.lineTo(7, -7);
       ctx.lineTo(10, 0);
@@ -412,23 +421,21 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
       ctx.lineTo(-5, -9);
       ctx.closePath();
       ctx.fill();
-      // crack detail
-      ctx.strokeStyle = "rgba(60,60,60,0.6)";
+      ctx.strokeStyle = "rgba(120,50,0,0.5)";
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(-2, -6); ctx.lineTo(3, 2); ctx.lineTo(-1, 6);
       ctx.stroke();
-      // highlight
-      ctx.fillStyle = "rgba(255,255,255,0.25)";
+      ctx.fillStyle = "rgba(255,200,100,0.3)";
       ctx.beginPath();
       ctx.ellipse(-3, -4, 3, 4, -0.5, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
 
     } else if (b.charId === "squad") {
-      // Rainbow blast — cycling colour rings
+      // Squad — pink/magenta energy rings
       const t = performance.now() / 120;
-      const colors = ["#ff4444","#ff9900","#ffee00","#44ff44","#00aaff","#cc44ff"];
+      const colors = ["#e879f9","#c026d3","#f0abfc","#a21caf","#f5d0fe","#e879f9"];
       for (let i = 0; i < colors.length; i++) {
         const angle = (t + i * (Math.PI * 2 / colors.length));
         const ox = Math.cos(angle) * 4;
@@ -441,26 +448,20 @@ export default function GamePage({ onLogout, loggedIn = true, onLogin }: Props) 
         ctx.ellipse(cx + ox, cy + oy, 7, 7, 0, 0, Math.PI * 2);
         ctx.fill();
       }
-      // bright white core
+      ctx.shadowColor = "#e879f9";
+      ctx.shadowBlur = 14;
       ctx.fillStyle = "#ffffff";
       ctx.beginPath();
       ctx.ellipse(cx, cy, 3, 5, 0, 0, Math.PI * 2);
       ctx.fill();
-      // sparkle ring glow
-      ctx.shadowColor = "#ffffff";
-      ctx.shadowBlur = 12;
-      ctx.fillStyle = "rgba(255,255,255,0.5)";
-      ctx.beginPath();
-      ctx.ellipse(cx, cy, 5, 7, 0, 0, Math.PI * 2);
-      ctx.fill();
       ctx.shadowBlur = 0;
 
     } else {
-      // OG Pod — original purple magic blast
+      // Default — cyan blast
       const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 10);
-      grad.addColorStop(0, "rgba(255,180,255,1)");
-      grad.addColorStop(0.4, "rgba(200,80,255,0.8)");
-      grad.addColorStop(1, "rgba(100,0,200,0)");
+      grad.addColorStop(0, "rgba(180,255,255,1)");
+      grad.addColorStop(0.4, "rgba(0,212,255,0.8)");
+      grad.addColorStop(1, "rgba(0,80,180,0)");
       ctx.fillStyle = grad;
       ctx.beginPath();
       ctx.ellipse(cx, cy, 10, 14, 0, 0, Math.PI * 2);
